@@ -10,8 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, appOptions);
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory: (): BadRequestException =>
-        new BadRequestException('Validation error'),
+      // exceptionFactory: (): BadRequestException =>
+      //   new BadRequestException('Validation error'),
       whitelist: true,
       forbidNonWhitelisted: true,
       transformOptions: {
