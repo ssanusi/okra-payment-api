@@ -7,35 +7,17 @@ services:
       context: .
       target: development
       dockerfile: ./Dockerfile
-    command: npm run start:debug
+    command: npm run start
     ports:
-      - 8800:8800
+      - 8000:8000
     networks:
       - server-network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped
-    depends_on:
-      - db
     environment:
-      MONGO_URL: root:pass12345@localhost
-
-  db:
-    image: mongo:5.0.0
-    container_name: mongodb
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=pass12345
-    networks:
-      - server-network
-    ports:
-      - 27017:27017
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
+      MONGO_URI: ${MONGO_URI}
+      SERVER_PORT: ${SERVER_PORT}
 networks:
   server-network:
