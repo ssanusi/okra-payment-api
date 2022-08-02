@@ -43,13 +43,17 @@ export class UsersService {
 
   findAll(PaginationQuery: PaginationQueryDto) {
     const { limit, offset } = PaginationQuery;
-    return this.userModel.find({}).populate('wallet').skip(offset).limit(limit);
+    return this.userModel
+      .find({})
+      .populate('wallets')
+      .skip(offset)
+      .limit(limit);
   }
 
   async findOne(id: string) {
     const user = await this.userModel
       .findOne({ _id: id })
-      .populate('wallet')
+      .populate('wallets')
       .exec();
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);

@@ -11,6 +11,7 @@ import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { FundWalletDto } from './dto/fund-wallet.dto';
 
 @Controller('wallets')
 export class WalletsController {
@@ -34,5 +35,13 @@ export class WalletsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto) {
     return this.walletsService.update(id, updateWalletDto);
+  }
+
+  @Post('/fund')
+  fundWallet(@Body() fundWalletDto: FundWalletDto) {
+    return this.walletsService.fundWallet(
+      fundWalletDto.walletId,
+      fundWalletDto.amount,
+    );
   }
 }

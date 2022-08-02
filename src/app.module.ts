@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { WalletsModule } from './wallets/wallets.module';
+import { PaymentsModule } from './payments/payments.module';
+import { RefundsModule } from './refunds/refunds.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -11,6 +13,8 @@ import { WalletsModule } from './wallets/wallets.module';
     ),
     UsersModule,
     WalletsModule,
+    PaymentsModule,
+    RefundsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
