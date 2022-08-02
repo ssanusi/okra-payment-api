@@ -10,6 +10,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -72,8 +73,22 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    await this.findOne(id);
-    await this.userModel.findOneAndRemove({ _id: id });
-    return `This action removes a #${id} user`;
+    const user = await this.userModel.findOneAndRemove({ _id: id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
+  }
+
+  async validateUser(email: string, password: string) {
+    const user = await this.userModel
+      .findOne({ email })
+      .populate('wallet')
+      .exec();
+    if (user && (await bcrypt.compareSync(password, user.password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 }

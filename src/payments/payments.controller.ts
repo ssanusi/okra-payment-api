@@ -5,16 +5,16 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-// import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
-// import { CreatePaymentsDto } from './dto/create-payments.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 
+@UseGuards(PrincipalGuard)
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}

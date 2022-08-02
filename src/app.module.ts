@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { WalletsModule } from './wallets/wallets.module';
 import { PaymentsModule } from './payments/payments.module';
 import { RefundsModule } from './refunds/refunds.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -15,6 +16,7 @@ import { RefundsModule } from './refunds/refunds.module';
     WalletsModule,
     PaymentsModule,
     RefundsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
