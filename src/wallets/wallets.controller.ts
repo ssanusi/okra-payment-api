@@ -3,14 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
-import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { FundWalletDto } from './dto/fund-wallet.dto';
 import { PrincipalGuard } from 'src/auth/guard/principal.guard';
@@ -21,30 +20,60 @@ export class WalletsController {
   constructor(private readonly walletsService: WalletsService) {}
 
   @Post()
-  create(@Body() createWalletDto: CreateWalletDto) {
-    return this.walletsService.create(createWalletDto);
+  async create(@Body() createWalletDto: CreateWalletDto, @Res() res) {
+    try {
+      const wallet = await this.walletsService.create(createWalletDto);
+      return res
+        .status(201)
+        .json({ status: 'success', message: 'Wallet created', data: wallet });
+    } catch (error) {
+      res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 
   @Get()
-  findAllWallets(@Query() paginationQuery: PaginationQueryDto) {
-    return this.walletsService.findAll(paginationQuery);
+  async findAllWallets(
+    @Query() paginationQuery: PaginationQueryDto,
+    @Res() res,
+  ) {
+    try {
+      const wallets = await this.walletsService.findAll(paginationQuery);
+      return res.status(200).json({
+        status: 'success',
+        message: 'wallets retrieved successfully',
+        data: wallets,
+      });
+    } catch (error) {
+      res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.walletsService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWalletDto: UpdateWalletDto) {
-    return this.walletsService.update(id, updateWalletDto);
+  async findOne(@Param('id') id: string, @Res() res) {
+    try {
+      const wallet = await this.walletsService.findOne(id);
+      return res.status(200).json({
+        status: 'success',
+        message: 'wallet retrieved successfully',
+        data: wallet,
+      });
+    } catch (error) {
+      res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 
   @Post('/fund')
-  fundWallet(@Body() fundWalletDto: FundWalletDto) {
-    return this.walletsService.fundWallet(
-      fundWalletDto.walletId,
-      fundWalletDto.amount,
-    );
+  async fundWallet(@Body() fundWalletDto: FundWalletDto, @Res() res) {
+    try {
+      const wallet = await this.walletsService.fundWallet(
+        fundWalletDto.walletId,
+        fundWalletDto.amount,
+      );
+      return res
+        .status(200)
+        .json({ status: 'success', message: 'Wallet funded', data: wallet });
+    } catch (error) {
+      res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 }

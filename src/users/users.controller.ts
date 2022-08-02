@@ -3,15 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 
@@ -21,27 +19,44 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto, @Res() res) {
+    try {
+      const user = await this.usersService.create(createUserDto);
+      return res.status(201).json({
+        status: 'success',
+        message: 'User created Successfully',
+        data: user,
+      });
+    } catch (error) {
+      res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 
   @Get()
-  findAll(@Query() paginationQuery: PaginationQueryDto) {
-    return this.usersService.findAll(paginationQuery);
+  async findAll(@Query() paginationQuery: PaginationQueryDto, @Res() res) {
+    try {
+      const users = await this.usersService.findAll(paginationQuery);
+      return res.status(200).json({
+        status: 'success',
+        message: 'Users Retrieved Successfully',
+        data: users,
+      });
+    } catch (error) {
+      return res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  async findOne(@Param('id') id: string, @Res() res) {
+    try {
+      const user = await this.usersService.findOne(id);
+      return res.status(200).json({
+        status: 'success',
+        message: 'User Retrieved Successfully',
+        data: user,
+      });
+    } catch (error) {
+      return res.status(400).json({ status: 'fail', message: error.message });
+    }
   }
 }
