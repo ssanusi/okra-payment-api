@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 
+@UseGuards(PrincipalGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

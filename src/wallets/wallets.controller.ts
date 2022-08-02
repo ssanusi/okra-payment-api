@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { FundWalletDto } from './dto/fund-wallet.dto';
+import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 
+@UseGuards(PrincipalGuard)
 @Controller('wallets')
 export class WalletsController {
   constructor(private readonly walletsService: WalletsService) {}

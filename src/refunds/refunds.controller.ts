@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { RefundsService } from './refunds.service';
 import { CreateRefundDto } from './dto/create-refund.dto';
 import { UpdateRefundDto } from './dto/update-refund.dto';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 
+@UseGuards(PrincipalGuard)
 @Controller('refunds')
 export class RefundsController {
   constructor(private readonly refundsService: RefundsService) {}
