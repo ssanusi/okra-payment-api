@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { RefundsService } from './refunds.service';
 import { CreateRefundDto } from './dto/create-refund.dto';
@@ -20,8 +21,8 @@ export class RefundsController {
   constructor(private readonly refundsService: RefundsService) {}
 
   @Post()
-  create(@Body() createRefundDto: CreateRefundDto) {
-    return this.refundsService.create(createRefundDto);
+  create(@Req() req, @Body() createRefundDto: CreateRefundDto) {
+    return this.refundsService.create(createRefundDto, req.user);
   }
 
   @Get()

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe, BadRequestException } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 const logger: Logger = new Logger('Main');
 const PORT = process.env.SERVER_PORT || 8800;
@@ -10,8 +10,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, appOptions);
   app.useGlobalPipes(
     new ValidationPipe({
-      // exceptionFactory: (): BadRequestException =>
-      //   new BadRequestException('Validation error'),
       whitelist: true,
       forbidNonWhitelisted: true,
       transformOptions: {

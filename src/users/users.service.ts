@@ -46,7 +46,10 @@ export class UsersService {
     const { limit, offset } = PaginationQuery;
     return this.userModel
       .find({})
-      .populate('wallets')
+      .populate({
+        path: 'wallets',
+        select: ['balance', 'currency', 'dailyLimit'],
+      })
       .skip(offset)
       .limit(limit);
   }
@@ -54,7 +57,10 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.userModel
       .findOne({ _id: id })
-      .populate('wallets')
+      .populate({
+        path: 'wallets',
+        select: ['balance', 'currency', 'dailyLimit'],
+      })
       .exec();
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
@@ -81,13 +87,10 @@ export class UsersService {
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.userModel
-      .findOne({ email })
-      .populate('wallet')
-      .exec();
+    const user = await this.userModel.findOne({ email }).exec();
     if (user && (await bcrypt.compareSync(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+      const { _id, email } = user;
+      return { userId: _id, email };
     }
     return null;
   }

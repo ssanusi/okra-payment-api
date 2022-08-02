@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { Payment, PaymentDocument } from 'src/payments/entities/payment.entity';
 import { PaymentsService } from 'src/payments/payments.service';
@@ -18,7 +18,7 @@ export class RefundsService {
     @Inject(PaymentsService)
     private readonly paymentService: PaymentsService,
   ) {}
-  async create(createRefundDto: CreateRefundDto) {
+  async create(createRefundDto: CreateRefundDto, userId: string) {
     const payment = await this.paymentModel
       .findOne({ _id: createRefundDto.paymentId })
       .exec();
@@ -50,6 +50,7 @@ export class RefundsService {
           paymentId: payment._id,
         },
         'REFUND',
+        userId,
       );
       if (transaction) {
         const refund = new this.refundModel({

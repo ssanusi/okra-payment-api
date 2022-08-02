@@ -21,18 +21,23 @@ export class PaymentsService {
     private readonly walletService: WalletsService,
     @InjectConnection() private readonly connection: Connection,
   ) {}
-  async create(createPaymentDto: CreatePaymentDto[] | CreatePaymentDto) {
+  async create(
+    createPaymentDto: CreatePaymentDto[] | CreatePaymentDto,
+    userId: string,
+  ) {
     const transactions = [];
     if (Array.isArray(createPaymentDto)) {
       for (const payment of createPaymentDto) {
-        transactions.push(await this.processPayment(payment, 'PAYMENT'));
+        transactions.push(
+          await this.processPayment(payment, 'PAYMENT', userId),
+        );
       }
       return transactions;
     }
-    return await this.processPayment(createPaymentDto, 'PAYMENT');
+    return await this.processPayment(createPaymentDto, 'PAYMENT', userId);
   }
 
-  async processPayment(createPaymentDto: CreatePaymentDto | any, type) {
+  async processPayment(createPaymentDto: CreatePaymentDto | any, type, userId) {
     let payment;
     if (type === 'PAYMENT') {
       payment = await this.paymentModel.create({
@@ -42,6 +47,7 @@ export class PaymentsService {
         currency: createPaymentDto.currency,
         type: type,
         refundableAmount: createPaymentDto.amount,
+        owner: userId,
       });
     } else if (type === 'REFUND') {
       payment = await this.paymentModel
