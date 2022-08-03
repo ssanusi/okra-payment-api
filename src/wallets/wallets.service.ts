@@ -63,7 +63,7 @@ export class WalletsService {
     const { limit, offset } = PaginationQuery;
     return this.walletModel
       .find({})
-      .populate('owner')
+      .populate({ path: 'owner', select: ['firstName', 'lastName', 'email'] })
       .skip(offset)
       .limit(limit);
   }

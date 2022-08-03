@@ -10,6 +10,8 @@ import {
   WalletTransaction,
   WalletTransactionSchema,
 } from 'src/wallets/entities/wallet-transaction.entity';
+import { RefundsService } from 'src/refunds/refunds.service';
+import { Refund, RefundSchema } from 'src/refunds/entities/refund.entity';
 
 @Module({
   imports: [
@@ -30,9 +32,13 @@ import {
         name: WalletTransaction.name,
         schema: WalletTransactionSchema,
       },
+      {
+        name: Refund.name,
+        schema: RefundSchema,
+      },
     ]),
   ],
   controllers: [PaymentsController],
-  providers: [PaymentsService, WalletsService],
+  providers: [PaymentsService, WalletsService, RefundsService],
 })
 export class PaymentsModule {}

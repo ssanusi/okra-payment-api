@@ -5,7 +5,6 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { Payment, PaymentDocument } from 'src/payments/entities/payment.entity';
 import { PaymentsService } from 'src/payments/payments.service';
 import { CreateRefundDto } from './dto/create-refund.dto';
-import { UpdateRefundDto } from './dto/update-refund.dto';
 import { Refund, RefundDocument } from './entities/refund.entity';
 
 @Injectable()
@@ -76,13 +75,14 @@ export class RefundsService {
     }
   }
 
-  findAll(paginationQuery: PaginationQueryDto) {
+  async findAll(paginationQuery: PaginationQueryDto) {
     const { offset, limit } = paginationQuery;
-    return this.refundModel.find({}).skip(offset).limit(limit);
+    const refunds = await this.refundModel.find({}).skip(offset).limit(limit);
+    return refunds;
   }
 
-  findOne(id: string) {
-    const refund = this.refundModel.findOne({ _id: id }).exec();
+  async findOne(id: string) {
+    const refund = await this.refundModel.findOne({ _id: id }).exec();
     if (!refund) {
       throw new HttpException(
         `Refund with id ${id} not found`,
@@ -90,9 +90,5 @@ export class RefundsService {
       );
     }
     return refund;
-  }
-
-  update(id: number, updateRefundDto: UpdateRefundDto) {
-    return `This action updates a #${id} refund`;
   }
 }

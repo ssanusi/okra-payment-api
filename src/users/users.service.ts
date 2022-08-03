@@ -88,10 +88,10 @@ export class UsersService {
 
   async validateUser(email: string, password: string) {
     const user = await this.userModel.findOne({ email }).exec();
-    if (user && (await bcrypt.compareSync(password, user.password))) {
+    if (user && bcrypt.compareSync(password, user.password)) {
       const { _id, email } = user;
       return { userId: _id, email };
     }
-    return null;
+    throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
   }
 }
