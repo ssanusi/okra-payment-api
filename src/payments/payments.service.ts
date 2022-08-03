@@ -21,10 +21,8 @@ export class PaymentsService {
     private readonly walletService: WalletsService,
     @InjectConnection() private readonly connection: Connection,
   ) {}
-  async create(
-    createPaymentDto: CreatePaymentDto[] | CreatePaymentDto,
-    userId: string,
-  ) {
+  async create(createPaymentDto: CreatePaymentDto[], userId: string) {
+    console.log(createPaymentDto);
     const transactions = [];
     if (Array.isArray(createPaymentDto)) {
       for (const payment of createPaymentDto) {
@@ -34,7 +32,6 @@ export class PaymentsService {
       }
       return transactions;
     }
-    return await this.processPayment(createPaymentDto, 'PAYMENT', userId);
   }
 
   async processPayment(createPaymentDto: CreatePaymentDto | any, type, userId) {

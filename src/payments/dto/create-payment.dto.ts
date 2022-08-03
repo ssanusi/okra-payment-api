@@ -1,4 +1,10 @@
-import { IsNumber, IsString } from 'class-validator';
+import {
+  IsMongoId,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreatePaymentDto {
   @IsNumber()
@@ -7,9 +13,9 @@ export class CreatePaymentDto {
   @IsString()
   readonly currency: string;
 
-  @IsString()
+  @IsMongoId()
   readonly wallet_to_debit: string;
 
-  @IsString()
+  @IsMongoId()
   readonly wallet_to_credit: string;
 }

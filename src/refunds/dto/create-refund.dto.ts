@@ -1,7 +1,7 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsMongoId, IsNumber } from 'class-validator';
 
 export class CreateRefundDto {
-  @IsString()
+  @IsMongoId()
   readonly paymentId: string;
 
   @IsNumber()
