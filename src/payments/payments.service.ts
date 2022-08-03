@@ -22,7 +22,6 @@ export class PaymentsService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
   async create(createPaymentDto: CreatePaymentDto[], userId: string) {
-    console.log(createPaymentDto);
     const transactions = [];
     if (Array.isArray(createPaymentDto)) {
       for (const payment of createPaymentDto) {

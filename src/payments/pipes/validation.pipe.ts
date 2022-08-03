@@ -11,7 +11,10 @@ import { CreatePaymentDto } from '../dto/create-payment.dto';
 @Injectable()
 export class ArrayValidationPipe implements PipeTransform<any> {
   async transform(value: CreatePaymentDto[], { metatype }: ArgumentMetadata) {
-    if (value instanceof Array && value.length > 0) {
+    if (value instanceof Array) {
+      if (value.length < 0) {
+        throw new BadRequestException('Payment array is empty');
+      }
       const errors = [];
 
       const objects = plainToInstance(CreatePaymentDto, value);
@@ -29,6 +32,6 @@ export class ArrayValidationPipe implements PipeTransform<any> {
       }
       return value;
     }
-    throw new BadRequestException('Invalid array of Payments');
+    throw new BadRequestException('Invalid Array of Payments');
   }
 }
