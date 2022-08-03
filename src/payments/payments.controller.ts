@@ -8,8 +8,6 @@ import {
   UseGuards,
   Req,
   Res,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
@@ -17,6 +15,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PrincipalGuard } from 'src/auth/guard/principal.guard';
 import { GetPaymentDto } from './dto/get-payment.dto';
 import { RefundsService } from 'src/refunds/refunds.service';
+import { ArrayValidationPipe } from './pipes/validation.pipe';
 
 @UseGuards(PrincipalGuard)
 @Controller('payments')
@@ -29,7 +28,7 @@ export class PaymentsController {
   @Post('/initiate')
   async create(
     @Req() req,
-    @Body() createPaymentDto: CreatePaymentDto[],
+    @Body(new ArrayValidationPipe()) createPaymentDto: CreatePaymentDto[],
     @Res() res,
   ) {
     try {
